@@ -1,9 +1,18 @@
 const pubDate = document.getElementById('pub-date')
 
 const addButton = document.getElementById('add-form-button');
+const deleteButton = document.getElementById('delete-form-button');
+
 const listElement = document.getElementById('list');
 const nameElement = document.getElementById('input-name');
 const textElement = document.getElementById('text-area');
+
+function deleteComment() {
+    const comments = listElement.getElementsByTagName('li'); // Получаем все комментарии
+    if (comments.length > 0) {
+        listElement.removeChild(comments[comments.length - 1]); // Удаляем последний комментарий
+    }
+}
 
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0'); // Получаем день и добавляем ведущий ноль
@@ -15,13 +24,7 @@ function formatDate(date) {
     return `${day}.${month}.${year} ${hours}:${minutes}`; // Форматируем строку
 }
 
-// Использование функции
-const currentDate = new Date();
-const formattedDate = formatDate(currentDate);
-
-
-
-addButton.addEventListener("click", () => {
+function addComment() {
     const nameUser = nameElement.value; 
     const text = textElement.value;
 
@@ -54,5 +57,28 @@ addButton.addEventListener("click", () => {
     // Очищаем поля ввода
     nameElement.value = '';
     textElement.value = '';
-});
 
+}
+
+function updateButtonState() {
+    // Проверяем, заполнены ли оба поля
+    const isNameFilled = nameElement.value.trim() !== '';
+    const isCommentFilled = textElement.value.trim() !== '';
+    
+    // Если оба поля заполнены, активируем кнопку, иначе - отключаем
+    addButton.disabled = !(isNameFilled && isCommentFilled);
+}
+
+addButton.addEventListener("click", addComment);
+
+nameElement.addEventListener('input', updateButtonState);
+textElement.addEventListener('input', updateButtonState);
+
+textElement.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // предотвращаем переход на новую строку
+        if (!addButton.disabled) { // Проверяем, не отключена ли кнопка
+            addComment();
+        }
+}});
+deleteButton.addEventListener('click', deleteComment);

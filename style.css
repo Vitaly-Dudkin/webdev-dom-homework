@@ -1,3 +1,9 @@
+@charset "UTF-8";
 .add-form-text {
   background-color: red;
+}
+
+.disable {
+  background-color: gray; /* Цвет кнопки, когда она отключена */
+  cursor: not-allowed; /* Курсор при наведении */
 }/*# sourceMappingURL=style.css.map */
