@@ -8,11 +8,11 @@
 
   <body>
     <div class="container">
-      <ul class="comments">
+      <ul class="comments" id="list">
         <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
+            <div>12.02.25 12:18</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
@@ -29,7 +29,7 @@
         <li class="comment">
           <div class="comment-header">
             <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
+            <div id="pub-date">13.02.25 19:22</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
@@ -49,23 +49,23 @@
           type="text"
           class="add-form-name"
           placeholder="Введите ваше имя"
+          id="input-name"
         />
         <textarea
           type="textarea"
           class="add-form-text"
           placeholder="Введите ваш коментарий"
           rows="4"
+          id="text-area"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
+          <button class="delete-form-button", id="delete-form-button">Delete</button>
+          <button class="add-form-button", id="add-form-button">Написать</button>
         </div>
       </div>
     </div>
+    <script src="main.js"></script>
   </body>
 
-  <script>
-    "use strict";
-    // Код писать здесь
-    console.log("It works!");
-  </script>
+
 </html>
