@@ -86,31 +86,36 @@ deleteButton.addEventListener('click', deleteComment);
 // Получаем все кнопки лайков
 const likeButtons = document.querySelectorAll('.like-button');
 
-// Обходим каждую кнопку лайка
+// Функция для обработки клика на кнопку лайка
+function handleLikeButtonClick(event) {
+  // Получаем кнопку, на которую кликнули
+  const button = event.target;
+
+  // Находим родительский элемент li (комментарий)
+  const comment = button.closest('.comment');
+
+  // Находим счетчик лайков внутри этого комментария
+  const likesCounter = comment.querySelector('.likes-counter');
+
+  // Получаем текущее количество лайков
+  let currentLikes = parseInt(likesCounter.textContent);
+
+  // Проверяем, есть ли у кнопки класс '-active-like'
+  if (button.classList.contains('-active-like')) {
+    // Если есть, значит лайк убираем
+    button.classList.remove('-active-like'); // Убираем активный класс
+    currentLikes--; // Уменьшаем количество лайков на 1
+  } else {
+    // Если нет, значит ставим лайк
+    button.classList.add('-active-like'); // Добавляем активный класс
+    currentLikes++; // Увеличиваем количество лайков на 1
+  }
+
+  // Обновляем текст счетчика лайков
+  likesCounter.textContent = currentLikes;
+}
+
+// Обходим каждую кнопку лайка и добавляем обработчик события клика
 likeButtons.forEach(button => {
-  // Добавляем обработчик события клика
-  button.addEventListener('click', function() {
-    // Находим родительский элемент li (комментарий)
-    const comment = this.closest('.comment');
-    
-    // Находим счетчик лайков внутри этого комментария
-    const likesCounter = comment.querySelector('.likes-counter');
-    
-    // Получаем текущее количество лайков
-    let currentLikes = parseInt(likesCounter.textContent);
-    
-    // Проверяем, есть ли у кнопки класс '-active-like'
-    if (this.classList.contains('-active-like')) {
-      // Если есть, значит лайк убираем
-      this.classList.remove('-active-like'); // Убираем активный класс
-      currentLikes--; // Уменьшаем количество лайков на 1
-    } else {
-      // Если нет, значит ставим лайк
-      this.classList.add('-active-like'); // Добавляем активный класс
-      currentLikes++; // Увеличиваем количество лайков на 1
-    }
-    
-    // Обновляем текст счетчика лайков
-    likesCounter.textContent = currentLikes;
-  });
+  button.addEventListener('click', handleLikeButtonClick);
 });
