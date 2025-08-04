@@ -7,12 +7,58 @@ const listElement = document.getElementById('list');
 const nameElement = document.getElementById('input-name');
 const textElement = document.getElementById('text-area');
 
-function deleteComment() {
-    const comments = listElement.getElementsByTagName('li'); // Получаем все комментарии
-    if (comments.length > 0) {
-        listElement.removeChild(comments[comments.length - 1]); // Удаляем последний комментарий
-    }
+// Массив для хранения комментариев
+const comments = [
+    {
+        author: "Глеб Фокин",
+        date: "12.02.25 12:18",
+        text: "Это будет первый комментарий на этой странице",
+        likes: 3,
+    },
+    {
+        author: "Варвара Н.",
+        date: "13.02.25 19:22",
+        text: "Мне нравится как оформлена эта страница! ❤️",
+        likes: 75,
+        activeLike: false,
+    },
+];
+
+// Функция для рендеринга комментариев
+// Функция для рендеринга комментариев
+function renderComments() {
+    const list = document.getElementById("list");
+    list.innerHTML = ""; // Очищаем список перед рендерингом
+
+    comments.forEach((comment, index) => {
+        const li = document.createElement("li");
+        li.classList.add("comment");
+        
+        li.innerHTML = `
+            <div class="comment-header">
+                <div>${comment.author}</div>
+                <div>${comment.date}</div>
+            </div>
+            <div class="comment-body">
+                <div class="comment-text">${comment.text}</div>
+            </div>
+            <div class="comment-footer">
+                <div class="likes">
+                    <span class="likes-counter">${comment.likes}</span>
+                    <button class="like-button ${comment.activeLike ? '-active-like' : ''}"></button>
+                </div>
+            </div>`
+        ;
+
+        // Сохраняем индекс комментария в атрибуте data-attribute для дальнейшего использования
+        li.querySelector('.like-button').setAttribute('data-index', index);
+
+        list.appendChild(li);
+    });
 }
+
+// Изначальный рендеринг комментариев
+renderComments();
 
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0'); // Получаем день и добавляем ведущий ноль
@@ -30,34 +76,26 @@ function addComment() {
 
     if (nameUser || text) {
 
-    const newComment = `<li class="comment">
-            <div class="comment-header">
-                <div>${nameUser}</div>
-                <div>${formatDate(new Date())}</div>
-            </div>
-            <div class="comment-body">
-                <div class="comment-text">
-                ${text}
-                </div>
-            </div>
-            <div class="comment-footer">
-                <div class="likes">
-                <span class="likes-counter">${0}</span>
-                <button class="like-button"></button>
-                </div>
-            </div>
-    </li>`;
+        comments.push(    {
+            author: `${nameUser}`,
+            date: formatDate(new Date),
+            text: `${text}`,
+            likes: 0,
+            activeLike: false,
+        },)
 
+         
+        renderComments();
     // Добавляем новый комментарий в список
-    listElement.innerHTML += newComment
     } else {
         nameElement.classList.add('error')
     }
 
     // Очищаем поля ввода
     nameElement.value = '';
-    textElement.value = '';
+    textElement.value = ''
 
+   
 }
 
 function updateButtonState() {
@@ -81,41 +119,38 @@ textElement.addEventListener('keypress', function(event) {
             addComment();
         }
 }});
-deleteButton.addEventListener('click', deleteComment);
 
-// Получаем все кнопки лайков
-const likeButtons = document.querySelectorAll('.like-button');
+// Делегирование событий для кнопок лайков
+document.getElementById('list').addEventListener('click', function(event) {
+    if (event.target.classList.contains('like-button')) {
+        const button = event.target;
+        const index = button.getAttribute('data-index'); // Получаем индекс комментария из атрибута
+        const comment = comments[index]; // Получаем соответствующий комментарий
 
-// Функция для обработки клика на кнопку лайка
-function handleLikeButtonClick(event) {
-  // Получаем кнопку, на которую кликнули
-  const button = event.target;
+        // Получаем текущее количество лайков
+        let currentLikes = comment.likes;
 
-  // Находим родительский элемент li (комментарий)
-  const comment = button.closest('.comment');
+        // Проверяем, есть ли у кнопки класс '-active-like'
+        if (button.classList.contains('-active-like')) {
+            // Если есть, значит лайк убираем
+            button.classList.remove('-active-like'); // Убираем активный класс
+            currentLikes--; // Уменьшаем количество лайков на 1
+            comment.activeLike = false; // Обновляем состояние лайка в массиве
+        } else {
+            // Если нет, значит ставим лайк
+            button.classList.add('-active-like'); // Добавляем активный класс
+            currentLikes++; // Увеличиваем количество лайков на 1
+            comment.activeLike = true; // Обновляем состояние лайка в массиве
+        }
 
-  // Находим счетчик лайков внутри этого комментария
-  const likesCounter = comment.querySelector('.likes-counter');
-
-  // Получаем текущее количество лайков
-  let currentLikes = parseInt(likesCounter.textContent);
-
-  // Проверяем, есть ли у кнопки класс '-active-like'
-  if (button.classList.contains('-active-like')) {
-    // Если есть, значит лайк убираем
-    button.classList.remove('-active-like'); // Убираем активный класс
-    currentLikes--; // Уменьшаем количество лайков на 1
-  } else {
-    // Если нет, значит ставим лайк
-    button.classList.add('-active-like'); // Добавляем активный класс
-    currentLikes++; // Увеличиваем количество лайков на 1
-  }
-
-  // Обновляем текст счетчика лайков
-  likesCounter.textContent = currentLikes;
-}
-
+        // Обновляем текст счетчика лайков
+        comment.likes = currentLikes; // Обновляем количество лайков в массиве
+        button.previousElementSibling.textContent = currentLikes; // Обновляем текст счетчика лайков
+    }
+});
 // Обходим каждую кнопку лайка и добавляем обработчик события клика
-likeButtons.forEach(button => {
-  button.addEventListener('click', handleLikeButtonClick);
+// Обработчик для кнопки очистки полей ввода (если есть)
+document.getElementById('delete-form-button').addEventListener('click', function() {
+    nameElement.value = '';
+    textElement.value = '';
 });
