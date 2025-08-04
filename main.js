@@ -82,3 +82,35 @@ textElement.addEventListener('keypress', function(event) {
         }
 }});
 deleteButton.addEventListener('click', deleteComment);
+
+// Получаем все кнопки лайков
+const likeButtons = document.querySelectorAll('.like-button');
+
+// Обходим каждую кнопку лайка
+likeButtons.forEach(button => {
+  // Добавляем обработчик события клика
+  button.addEventListener('click', function() {
+    // Находим родительский элемент li (комментарий)
+    const comment = this.closest('.comment');
+    
+    // Находим счетчик лайков внутри этого комментария
+    const likesCounter = comment.querySelector('.likes-counter');
+    
+    // Получаем текущее количество лайков
+    let currentLikes = parseInt(likesCounter.textContent);
+    
+    // Проверяем, есть ли у кнопки класс '-active-like'
+    if (this.classList.contains('-active-like')) {
+      // Если есть, значит лайк убираем
+      this.classList.remove('-active-like'); // Убираем активный класс
+      currentLikes--; // Уменьшаем количество лайков на 1
+    } else {
+      // Если нет, значит ставим лайк
+      this.classList.add('-active-like'); // Добавляем активный класс
+      currentLikes++; // Увеличиваем количество лайков на 1
+    }
+    
+    // Обновляем текст счетчика лайков
+    likesCounter.textContent = currentLikes;
+  });
+});
