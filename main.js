@@ -25,7 +25,6 @@ const comments = [
 ];
 
 // Функция для рендеринга комментариев
-// Функция для рендеринга комментариев
 function renderComments() {
     const list = document.getElementById("list");
     list.innerHTML = ""; // Очищаем список перед рендерингом
@@ -94,8 +93,6 @@ function addComment() {
     // Очищаем поля ввода
     nameElement.value = '';
     textElement.value = ''
-
-   
 }
 
 function updateButtonState() {
