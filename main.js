@@ -8,6 +8,10 @@ const nameElement = document.getElementById('input-name');
 const textElement = document.getElementById('text-area');
 
 // Массив для хранения комментариев
+
+const sanitizeHtml = (value) => {
+    return value.replaceAll("<", "&lt").replaceAll(">", "&gt")
+}
 const comments = [
     {
         author: "Глеб Фокин",
@@ -50,9 +54,26 @@ function renderComments() {
         ;
 
         // Сохраняем индекс комментария в атрибуте data-attribute для дальнейшего использования
-        li.querySelector('.like-button').setAttribute('data-index', index);
+        li.setAttribute('data-index', index);
 
         list.appendChild(li);
+
+        li.addEventListener('click', () => {
+            const currentComment = comments[index]; // Используем индекс из замыкания
+            textElement.value = `${currentComment.author}: ${currentComment.text}`; // Исправлено здесь
+            })
+
+        // Находим кнопку лайка внутри текущего комментария и добавляем обработчик
+        const likeButton = li.querySelector(".like-button");
+        likeButton.addEventListener("click", (event) => {
+            event.stopPropagation(); // Останавливаем всплытие события
+
+            // Обновляем количество лайков
+            comment.likes = comment.activeLike ? comment.likes - 1 : comment.likes + 1;
+            comment.activeLike = !comment.activeLike; // Переключаем состояние лайка
+
+            renderComments(); // Обновляем рендеринг комментариев
+        });
     });
 }
 
@@ -76,9 +97,9 @@ function addComment() {
     if (nameUser || text) {
 
         comments.push(    {
-            author: `${nameUser}`,
+            author: `${sanitizeHtml(nameUser)}`,
             date: formatDate(new Date),
-            text: `${text}`,
+            text: `${sanitizeHtml(text)}`,
             likes: 0,
             activeLike: false,
         },)
@@ -118,33 +139,33 @@ textElement.addEventListener('keypress', function(event) {
 }});
 
 // Делегирование событий для кнопок лайков
-document.getElementById('list').addEventListener('click', function(event) {
-    if (event.target.classList.contains('like-button')) {
-        const button = event.target;
-        const index = button.getAttribute('data-index'); // Получаем индекс комментария из атрибута
-        const comment = comments[index]; // Получаем соответствующий комментарий
+// document.getElementById('list').addEventListener('click', function(event) {
+//     if (event.target.classList.contains('like-button')) {
+//         const button = event.target;
+//         const index = button.getAttribute('data-index'); // Получаем индекс комментария из атрибута
+//         const comment = comments[index]; // Получаем соответствующий комментарий
 
-        // Получаем текущее количество лайков
-        let currentLikes = comment.likes;
+//         // Получаем текущее количество лайков
+//         let currentLikes = comment.likes;
 
-        // Проверяем, есть ли у кнопки класс '-active-like'
-        if (button.classList.contains('-active-like')) {
-            // Если есть, значит лайк убираем
-            button.classList.remove('-active-like'); // Убираем активный класс
-            currentLikes--; // Уменьшаем количество лайков на 1
-            comment.activeLike = false; // Обновляем состояние лайка в массиве
-        } else {
-            // Если нет, значит ставим лайк
-            button.classList.add('-active-like'); // Добавляем активный класс
-            currentLikes++; // Увеличиваем количество лайков на 1
-            comment.activeLike = true; // Обновляем состояние лайка в массиве
-        }
+//         // Проверяем, есть ли у кнопки класс '-active-like'
+//         if (button.classList.contains('-active-like')) {
+//             // Если есть, значит лайк убираем
+//             button.classList.remove('-active-like'); // Убираем активный класс
+//             currentLikes--; // Уменьшаем количество лайков на 1
+//             comment.activeLike = false; // Обновляем состояние лайка в массиве
+//         } else {
+//             // Если нет, значит ставим лайк
+//             button.classList.add('-active-like'); // Добавляем активный класс
+//             currentLikes++; // Увеличиваем количество лайков на 1
+//             comment.activeLike = true; // Обновляем состояние лайка в массиве
+//         }
 
-        // Обновляем текст счетчика лайков
-        comment.likes = currentLikes; // Обновляем количество лайков в массиве
-        button.previousElementSibling.textContent = currentLikes; // Обновляем текст счетчика лайков
-    }
-});
+//         // Обновляем текст счетчика лайков
+//         comment.likes = currentLikes; // Обновляем количество лайков в массиве
+//         button.previousElementSibling.textContent = currentLikes; // Обновляем текст счетчика лайков
+//     }
+// });
 // Обходим каждую кнопку лайка и добавляем обработчик события клика
 // Обработчик для кнопки очистки полей ввода (если есть)
 document.getElementById('delete-form-button').addEventListener('click', function() {
