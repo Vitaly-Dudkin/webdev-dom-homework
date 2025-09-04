@@ -11,8 +11,8 @@ addButton.addEventListener('click', () => {
     const text = textElement.value
 
     addComment() // Добавляем комментарий
-    nameElement.value = '' // Очищаем поля ввода
-    textElement.value = ''
+    nameUser = '' // Очищаем поля ввода
+    text = ''
 })
 
 addButton.addEventListener('click', addComment)
