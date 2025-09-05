@@ -1,5 +1,22 @@
 import { addButton, nameElement, textElement } from './vars.js'
 
+// Массив для хранения комментариев
+export let comments = []
+
+export const updateComments = (newComments) => {
+    comments = newComments.map((comment) => {
+        return {
+            author: comment.author,
+            date: formatDate(new Date()), // Здесь можно использовать реальную дату комментария
+            text: comment.text,
+            likes: 0,
+            activeLike: false,
+        }
+    })
+
+    console.log('Обновленные комментарии:', comments)
+}
+
 export const sanitizeHtml = (value) => {
     return value.replaceAll('<', '&lt').replaceAll('>', '&gt')
 }

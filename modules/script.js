@@ -1,14 +1,27 @@
 // script.js
 import { renderComments, addComment } from './comments.js'
-import { updateButtonState } from './utils.js'
+import { updateButtonState, updateComments } from './utils.js'
 import { addButton, nameElement, textElement } from './vars.js'
 
+fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
+    .then((response) => {
+        return response.json()
+    })
+    .then((data) => {
+        console.log(data)
+
+        updateComments(data.comments)
+        renderComments() // Передаем комментарии в функцию рендеринга
+    })
+    .catch((error) => {
+        console.error('Ошибка при загрузке комментариев:', error)
+    })
 // Изначальный рендеринг комментариев
 renderComments()
 
 addButton.addEventListener('click', () => {
-    const nameUser = nameElement.value
-    const text = textElement.value
+    let nameUser = nameElement.value
+    let text = textElement.value
 
     addComment() // Добавляем комментарий
     nameUser = '' // Очищаем поля ввода
