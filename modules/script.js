@@ -17,7 +17,7 @@ fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
         console.error('Ошибка при загрузке комментариев:', error)
     })
 // Изначальный рендеринг комментариев
-renderComments()
+// renderComments()
 
 addButton.addEventListener('click', () => {
     let nameUser = nameElement.value

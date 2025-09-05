@@ -1,4 +1,4 @@
-import { sanitizeHtml, formatDate, comments } from './utils.js'
+import { sanitizeHtml, formatDate, comments, updateComments } from './utils.js'
 import { nameElement, textElement } from './vars.js'
 
 // Функция для рендеринга комментариев
@@ -56,14 +56,28 @@ export function addComment() {
     const text = textElement.value
 
     if (nameUser || text) {
-        comments.push({
+        const newComment = {
             author: { name: `${sanitizeHtml(nameUser)}` },
             date: formatDate(new Date()),
             text: `${sanitizeHtml(text)}`,
             likes: 0,
             activeLike: false,
+        }
+
+        comments.push(newComment)
+
+        fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
+            method: 'POST',
+            body: JSON.stringify(comments),
         })
-        renderComments()
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                updateComments(data.comments)
+                renderComments()
+            })
+        // renderComments()
         // Добавляем новый комментарий в список
     } else {
         nameElement.classList.add('error')
