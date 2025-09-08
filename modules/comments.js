@@ -1,4 +1,4 @@
-import { sanitizeHtml, formatDate, comments, updateComments } from './utils.js'
+import { sanitizeHtml, formatDate, comments } from './utils.js'
 import { nameElement, textElement } from './vars.js'
 
 // Функция для рендеринга комментариев
@@ -68,17 +68,21 @@ export function addComment() {
 
         fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
             method: 'POST',
-            body: JSON.stringify(comments),
+            body: JSON.stringify({
+                text: sanitizeHtml(text),
+                name: sanitizeHtml(nameUser),
+            }),
         })
             .then((response) => {
                 return response.json()
             })
             .then((data) => {
-                updateComments(data.comments)
-                renderComments()
+                if (data) {
+                    renderComments()
+                } else {
+                    console.error('Unexpected data format:', data)
+                }
             })
-        // renderComments()
-        // Добавляем новый комментарий в список
     } else {
         nameElement.classList.add('error')
     }

@@ -8,8 +8,6 @@ fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
         return response.json()
     })
     .then((data) => {
-        console.log(data)
-
         updateComments(data.comments)
         renderComments() // Передаем комментарии в функцию рендеринга
     })
