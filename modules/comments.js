@@ -1,4 +1,4 @@
-import { sanitizeHtml, formatDate, comments } from './utils.js'
+import { sanitizeHtml, formatDate, comments, loadComments } from './utils.js'
 import { nameElement, textElement } from './vars.js'
 
 // Функция для рендеринга комментариев
@@ -78,7 +78,7 @@ export function addComment() {
             })
             .then((data) => {
                 if (data) {
-                    renderComments()
+                    loadComments()
                 } else {
                     console.error('Unexpected data format:', data)
                 }
