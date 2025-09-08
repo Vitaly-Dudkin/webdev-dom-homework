@@ -64,8 +64,6 @@ export function addComment() {
             activeLike: false,
         }
 
-        comments.push(newComment)
-
         fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
             method: 'POST',
             body: JSON.stringify({
@@ -78,6 +76,7 @@ export function addComment() {
             })
             .then((data) => {
                 if (data) {
+                    comments.push(newComment)
                     loadComments()
                 } else {
                     console.error('Unexpected data format:', data)
