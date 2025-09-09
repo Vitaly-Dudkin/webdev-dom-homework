@@ -56,14 +56,6 @@ export function addComment() {
     const text = textElement.value
 
     if (nameUser || text) {
-        const newComment = {
-            author: { name: `${sanitizeHtml(nameUser)}` },
-            date: formatDate(new Date()),
-            text: `${sanitizeHtml(text)}`,
-            likes: 0,
-            activeLike: false,
-        }
-
         fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
             method: 'POST',
             body: JSON.stringify({
@@ -76,7 +68,6 @@ export function addComment() {
             })
             .then((data) => {
                 if (data) {
-                    comments.push(newComment)
                     loadComments()
                 } else {
                     console.error('Unexpected data format:', data)
