@@ -1,23 +1,5 @@
-import { sanitizeHtml, formatDate } from './utils.js'
+import { sanitizeHtml, formatDate, comments, loadComments } from './utils.js'
 import { nameElement, textElement } from './vars.js'
-
-// Массив для хранения комментариев
-export const comments = [
-    {
-        author: 'Глеб Фокин',
-        date: '12.02.25 12:18',
-        text: 'Это будет первый комментарий на этой странице',
-        likes: 3,
-    },
-
-    {
-        author: 'Варвара Н.',
-        date: '13.02.25 19:22',
-        text: 'Мне нравится как оформлена эта страница! ❤️',
-        likes: 75,
-        activeLike: false,
-    },
-]
 
 // Функция для рендеринга комментариев
 export function renderComments() {
@@ -30,8 +12,8 @@ export function renderComments() {
 
         li.innerHTML = `
             <div class="comment-header">
-                <div>${comment.author}</div>
-                <div>${comment.date}</div>
+                <div>${comment.author.name}</div>
+                <div>${formatDate(new Date())}</div>
             </div>
             <div class="comment-body">
                 <div class="comment-text">${comment.text}</div>
@@ -50,7 +32,7 @@ export function renderComments() {
 
         li.addEventListener('click', () => {
             const currentComment = comments[index] // Используем индекс из замыкания
-            textElement.value = `${currentComment.author}: ${currentComment.text}` // Исправлено здесь
+            textElement.value = `${currentComment.author.name}: ${currentComment.text}` // Исправлено здесь
         })
 
         // Находим кнопку лайка внутри текущего комментария и добавляем обработчик
@@ -74,16 +56,23 @@ export function addComment() {
     const text = textElement.value
 
     if (nameUser || text) {
-        comments.push({
-            author: `${sanitizeHtml(nameUser)}`,
-            date: formatDate(new Date()),
-            text: `${sanitizeHtml(text)}`,
-            likes: 0,
-            activeLike: false,
+        fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
+            method: 'POST',
+            body: JSON.stringify({
+                text: sanitizeHtml(text),
+                name: sanitizeHtml(nameUser),
+            }),
         })
-
-        renderComments()
-        // Добавляем новый комментарий в список
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                if (data) {
+                    loadComments()
+                } else {
+                    console.error('Unexpected data format:', data)
+                }
+            })
     } else {
         nameElement.classList.add('error')
     }

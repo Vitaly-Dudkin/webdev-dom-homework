@@ -1,4 +1,22 @@
 import { addButton, nameElement, textElement } from './vars.js'
+import { renderComments } from './comments.js'
+
+// Массив для хранения комментариев
+export let comments = []
+
+export const updateComments = (newComments) => {
+    comments = newComments.map((comment) => {
+        return {
+            author: comment.author,
+            date: formatDate(new Date()),
+            text: comment.text,
+            likes: 0,
+            activeLike: false,
+        }
+    })
+
+    console.log('Обновленные комментарии:', comments)
+}
 
 export const sanitizeHtml = (value) => {
     return value.replaceAll('<', '&lt').replaceAll('>', '&gt')
@@ -21,4 +39,21 @@ export function updateButtonState() {
 
     // Если оба поля заполнены, активируем кнопку, иначе - отключаем
     addButton.disabled = !(isNameFilled && isCommentFilled)
+}
+
+export function loadComments() {
+    fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Сетевая ошибка: ' + response.statusText)
+            }
+            return response.json()
+        })
+        .then((data) => {
+            updateComments(data.comments) // Обновляем комментарии
+            renderComments() // Рендерим комментарии
+        })
+        .catch((error) => {
+            console.error('Ошибка при загрузке комментариев:', error)
+        })
 }
