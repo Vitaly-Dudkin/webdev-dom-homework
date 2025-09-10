@@ -52,16 +52,13 @@ export function renderComments() {
 }
 
 export function addComment() {
-    const nameUser = nameElement.value.trim()
-    const text = textElement.value.trim()
+    const nameUser = nameElement.value
+    const text = textElement.value
 
     addButton.disabled = true
     addButton.textContent = 'Публикация...'
 
-    const currentName = nameUser
-    const currentText = text
-
-    if (nameUser && text) {
+    if (nameUser || text) {
         fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
             method: 'POST',
             body: JSON.stringify({
@@ -70,42 +67,26 @@ export function addComment() {
             }),
         })
             .then((response) => {
-                if (!response.ok) {
-                    if (response.status === 400) {
-                        throw new Error(
-                            'Некорректные данные. Проверьте введенную информацию.',
-                        )
-                    } else if (response.status >= 500) {
-                        throw new Error('Ошибка сервера. Попробуйте позже.')
-                    } else {
-                        throw new Error(
-                            `Ошибка: ${response.status} ${response.statusText}`,
-                        )
-                    }
-                }
                 return response.json()
             })
-            .then(() => {
-                addButton.disabled = false
-                addButton.textContent = 'Написать'
+            .then((data) => {
+                if (data) {
+                    addButton.disabled = false
+                    addButton.textContent = 'Написать'
 
-                nameElement.value = ''
-                textElement.value = ''
-
-                loadComments()
-            })
-            .catch((error) => {
-                addButton.disabled = false
-                addButton.textContent = 'Написать'
-
-                nameElement.value = currentName
-                textElement.value = currentText
-
-                alert(error.message)
-                console.error('Ошибка при добавлении комментария:', error)
+                    loadComments()
+                } else {
+                    console.error('Unexpected data format:', data)
+                }
             })
     } else {
         addButton.disabled = false
         addButton.textContent = 'Написать'
+
+        nameElement.classList.add('error')
     }
+
+    // Очищаем поля ввода
+    nameElement.value = ''
+    textElement.value = ''
 }
