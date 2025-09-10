@@ -1,5 +1,5 @@
 import { sanitizeHtml, formatDate, comments, loadComments } from './utils.js'
-import { nameElement, textElement } from './vars.js'
+import { nameElement, textElement, addButton } from './vars.js'
 
 // Функция для рендеринга комментариев
 export function renderComments() {
@@ -13,7 +13,7 @@ export function renderComments() {
         li.innerHTML = `
             <div class="comment-header">
                 <div>${comment.author.name}</div>
-                <div>${formatDate(new Date())}</div>
+                <div>${formatDate(new Date(comment.date))}</div>
             </div>
             <div class="comment-body">
                 <div class="comment-text">${comment.text}</div>
@@ -55,6 +55,9 @@ export function addComment() {
     const nameUser = nameElement.value
     const text = textElement.value
 
+    addButton.disabled = true
+    addButton.textContent = 'Публикация...'
+
     if (nameUser || text) {
         fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
             method: 'POST',
@@ -68,12 +71,18 @@ export function addComment() {
             })
             .then((data) => {
                 if (data) {
+                    addButton.disabled = false
+                    addButton.textContent = 'Написать'
+
                     loadComments()
                 } else {
                     console.error('Unexpected data format:', data)
                 }
             })
     } else {
+        addButton.disabled = false
+        addButton.textContent = 'Написать'
+
         nameElement.classList.add('error')
     }
 

@@ -1,4 +1,4 @@
-import { addButton, nameElement, textElement } from './vars.js'
+import { addButton, nameElement, textElement, listElement } from './vars.js'
 import { renderComments } from './comments.js'
 
 // Массив для хранения комментариев
@@ -8,7 +8,7 @@ export const updateComments = (newComments) => {
     comments = newComments.map((comment) => {
         return {
             author: comment.author,
-            date: formatDate(new Date()),
+            date: comment.date,
             text: comment.text,
             likes: 0,
             activeLike: false,
@@ -42,7 +42,10 @@ export function updateButtonState() {
 }
 
 export function loadComments() {
-    fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
+    listElement.innerHTML =
+        '<div class="loading">Загрузка комментариев...</div>'
+
+    return fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Сетевая ошибка: ' + response.statusText)
