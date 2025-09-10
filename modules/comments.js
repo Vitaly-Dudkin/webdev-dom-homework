@@ -13,7 +13,7 @@ export function renderComments() {
         li.innerHTML = `
             <div class="comment-header">
                 <div>${comment.author.name}</div>
-                <div>${formatDate(new Date())}</div>
+                <div>${formatDate(new Date(comment.date))}</div>
             </div>
             <div class="comment-body">
                 <div class="comment-text">${comment.text}</div>

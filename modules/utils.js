@@ -8,7 +8,7 @@ export const updateComments = (newComments) => {
     comments = newComments.map((comment) => {
         return {
             author: comment.author,
-            date: formatDate(new Date()),
+            date: comment.date,
             text: comment.text,
             likes: 0,
             activeLike: false,
