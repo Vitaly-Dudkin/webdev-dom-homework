@@ -115,8 +115,19 @@ export function addComment() {
             nameElement.value = currentName
             textElement.value = currentText
 
-            // Показываем alert с сообщением об ошибке
-            alert(error.message)
+            // Обработка ошибок сети
+            if (
+                error instanceof TypeError &&
+                error.message === 'Failed to fetch'
+            ) {
+                alert(
+                    'Проблема с подключением к интернету. Пожалуйста, проверьте ваше соединение.',
+                )
+            } else {
+                // Показываем alert с сообщением об ошибке
+                alert(error.message)
+            }
+
             console.error('Ошибка при добавлении комментария:', error)
         })
 }
