@@ -1,5 +1,4 @@
-import { addButton, nameElement, textElement, listElement } from './vars.js'
-import { renderComments } from './comments.js'
+import { addButton, nameElement, textElement } from './vars.js'
 
 // Массив для хранения комментариев
 export let comments = []
@@ -39,24 +38,4 @@ export function updateButtonState() {
 
     // Если оба поля заполнены, активируем кнопку, иначе - отключаем
     addButton.disabled = !(isNameFilled && isCommentFilled)
-}
-
-export function loadComments() {
-    listElement.innerHTML =
-        '<div class="loading">Загрузка комментариев...</div>'
-
-    return fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments')
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Сетевая ошибка: ' + response.statusText)
-            }
-            return response.json()
-        })
-        .then((data) => {
-            updateComments(data.comments) // Обновляем комментарии
-            renderComments() // Рендерим комментарии
-        })
-        .catch((error) => {
-            console.error('Ошибка при загрузке комментариев:', error)
-        })
 }

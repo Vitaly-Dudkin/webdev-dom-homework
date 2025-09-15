@@ -1,6 +1,6 @@
-import { sanitizeHtml, formatDate, comments, loadComments } from './utils.js'
+import { sanitizeHtml, formatDate, comments } from './utils.js'
 import { nameElement, textElement, addButton } from './vars.js'
-
+import { loadComments } from './api.js'
 // Функция для рендеринга комментариев
 export function renderComments() {
     const list = document.getElementById('list')
