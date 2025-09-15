@@ -39,3 +39,11 @@ export function updateButtonState() {
     // Если оба поля заполнены, активируем кнопку, иначе - отключаем
     addButton.disabled = !(isNameFilled && isCommentFilled)
 }
+
+export function delay(interval = 200) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, interval)
+    })
+}

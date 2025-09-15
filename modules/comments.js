@@ -1,4 +1,4 @@
-import { sanitizeHtml, formatDate, comments } from './utils.js'
+import { sanitizeHtml, formatDate, comments, delay } from './utils.js'
 import { nameElement, textElement, addButton } from './vars.js'
 import { loadComments } from './api.js'
 // Функция для рендеринга комментариев
@@ -40,16 +40,24 @@ export function renderComments() {
         likeButton.addEventListener('click', (event) => {
             event.stopPropagation() // Останавливаем всплытие события
 
-            // Обновляем количество лайков
-            comment.likes = comment.activeLike
-                ? comment.likes - 1
-                : comment.likes + 1
-            comment.activeLike = !comment.activeLike // Переключаем состояние лайка
+            likeButton.disabled = true
+            likeButton.classList.add('-loading-like')
 
-            renderComments() // Обновляем рендеринг комментариев
+            delay(800)
+                .then(() => {
+                    comment.likes = comment.activeLike
+                        ? comment.likes - 1
+                        : comment.likes + 1
+                    comment.activeLike = !comment.activeLike
+                    renderComments()
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                    likeButton.classList.remove('-loading-like')
+                })
         })
-    })
-}
+    }) // Закрывающая скобка для forEach
+} // Закрывающая скобка для функции
 
 export function addComment() {
     const nameUser = nameElement.value.trim()
