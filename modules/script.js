@@ -1,7 +1,8 @@
 // script.js
 import { addComment } from './comments.js'
-import { updateButtonState, loadComments } from './utils.js'
+import { updateButtonState } from './utils.js'
 import { addButton, nameElement, textElement } from './vars.js'
+import { loadComments } from './api.js'
 
 loadComments()
 

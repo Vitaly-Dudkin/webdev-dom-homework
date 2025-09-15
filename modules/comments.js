@@ -1,6 +1,6 @@
-import { sanitizeHtml, formatDate, comments, loadComments } from './utils.js'
+import { sanitizeHtml, formatDate, comments, delay } from './utils.js'
 import { nameElement, textElement, addButton } from './vars.js'
-
+import { loadComments } from './api.js'
 // Функция для рендеринга комментариев
 export function renderComments() {
     const list = document.getElementById('list')
@@ -40,53 +40,102 @@ export function renderComments() {
         likeButton.addEventListener('click', (event) => {
             event.stopPropagation() // Останавливаем всплытие события
 
-            // Обновляем количество лайков
-            comment.likes = comment.activeLike
-                ? comment.likes - 1
-                : comment.likes + 1
-            comment.activeLike = !comment.activeLike // Переключаем состояние лайка
+            likeButton.disabled = true
+            likeButton.classList.add('-loading-like')
 
-            renderComments() // Обновляем рендеринг комментариев
+            delay(800)
+                .then(() => {
+                    comment.likes = comment.activeLike
+                        ? comment.likes - 1
+                        : comment.likes + 1
+                    comment.activeLike = !comment.activeLike
+                    renderComments()
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                    likeButton.classList.remove('-loading-like')
+                })
         })
-    })
-}
+    }) // Закрывающая скобка для forEach
+} // Закрывающая скобка для функции
 
 export function addComment() {
-    const nameUser = nameElement.value
-    const text = textElement.value
+    const nameUser = nameElement.value.trim()
+    const text = textElement.value.trim()
+
+    // Проверка на клиенте перед отправкой
+    if (nameUser.length < 3) {
+        alert('Имя должно содержать не менее 3 символов')
+        return
+    }
+
+    if (text.length < 3) {
+        alert('Текст комментария должен содержать не менее 3 символов')
+        return
+    }
 
     addButton.disabled = true
     addButton.textContent = 'Публикация...'
 
-    if (nameUser || text) {
-        fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
-            method: 'POST',
-            body: JSON.stringify({
-                text: sanitizeHtml(text),
-                name: sanitizeHtml(nameUser),
-            }),
-        })
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                if (data) {
-                    addButton.disabled = false
-                    addButton.textContent = 'Написать'
+    // Сохраняем текущие значения для восстановления в случае ошибки
+    const currentName = nameUser
+    const currentText = text
 
-                    loadComments()
+    fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+            text: sanitizeHtml(text),
+            name: sanitizeHtml(nameUser),
+        }),
+    })
+        .then((response) => {
+            // Проверяем статус ответа
+            if (!response.ok) {
+                if (response.status === 400) {
+                    throw new Error(
+                        'Имя и текст должны содержать не менее 3 символов',
+                    )
+                } else if (response.status >= 500) {
+                    throw new Error('Ошибка сервера. Попробуйте позже.')
                 } else {
-                    console.error('Unexpected data format:', data)
+                    throw new Error(
+                        `Ошибка: ${response.status} ${response.statusText}`,
+                    )
                 }
-            })
-    } else {
-        addButton.disabled = false
-        addButton.textContent = 'Написать'
+            }
+            return response.json()
+        })
+        .then(() => {
+            addButton.disabled = false
+            addButton.textContent = 'Написать'
 
-        nameElement.classList.add('error')
-    }
+            // Очищаем поля только при успешной отправке
+            nameElement.value = ''
+            textElement.value = ''
 
-    // Очищаем поля ввода
-    nameElement.value = ''
-    textElement.value = ''
+            loadComments()
+        })
+        .catch((error) => {
+            addButton.disabled = false
+            addButton.textContent = 'Написать'
+
+            // Восстанавливаем значения полей при ошибке
+            nameElement.value = currentName
+            textElement.value = currentText
+
+            // Обработка ошибок сети
+            if (
+                error instanceof TypeError &&
+                error.message === 'Failed to fetch'
+            ) {
+                alert(
+                    'Проблема с подключением к интернету. Пожалуйста, проверьте ваше соединение.',
+                )
+            } else {
+                // Показываем alert с сообщением об ошибке
+                alert(error.message)
+            }
+
+            console.error('Ошибка при добавлении комментария:', error)
+        })
 }
