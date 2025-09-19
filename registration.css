@@ -1,0 +1,120 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #060000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  background: rgb(150, 0, 176);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+}
+
+.container__title {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.container__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.container__input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 8px 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.container__input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.container__input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.container__input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.container__button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.container__button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.container__toggle-link {
+  text-align: center;
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.container__status {
+  color: rgb(3, 176, 0);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.container__status:hover {
+  color: #04ff00;
+  text-decoration: underline;
+}
+
+.container__comments-link {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.container__comments-link .container__button {
+  background-color: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  margin-top: 0;
+}
+
+.container__comments-link .container__button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}/*# sourceMappingURL=registration.css.map */

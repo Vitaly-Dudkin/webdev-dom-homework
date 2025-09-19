@@ -9,7 +9,7 @@ export const updateComments = (newComments) => {
             author: comment.author,
             date: comment.date,
             text: comment.text,
-            likes: 0,
+            likes: comment.likes,
             activeLike: false,
         }
     })
@@ -46,4 +46,20 @@ export function delay(interval = 200) {
             resolve()
         }, interval)
     })
+}
+
+// Функция переключения между формами
+export function toggleForms() {
+    console.log('2')
+    const loginForm = document.getElementById('login-form')
+    const registrationForm = document.getElementById('registration-form')
+
+    // Переключаем видимость форм
+    if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'flex'
+        registrationForm.style.display = 'none'
+    } else {
+        loginForm.style.display = 'none'
+        registrationForm.style.display = 'flex'
+    }
 }

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="registration.css" />
+        <title>Registration</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="container__form" id="registration-form">
+                <h2 class="container__title">Регистрация</h2>
+                <input
+                    type="text"
+                    id="reg-name"
+                    class="container__input"
+                    placeholder="Имя"
+                    required
+                />
+                <input
+                    type="email"
+                    id="reg-email"
+                    class="container__input"
+                    placeholder="Email"
+                    required
+                />
+                <input
+                    type="password"
+                    id="reg-password"
+                    class="container__input"
+                    placeholder="Пароль"
+                    required
+                />
+                <button type="submit" class="container__button" id="sing-up">
+                    Зарегистрироваться
+                </button>
+                <div class="container__toggle-link">
+                    <span
+                        >Уже есть аккаунт?
+                        <a href="#" class="container__status" id="to-login">
+                            Войдите
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="container__form" id="login-form" style="display: none">
+                <h2 class="container__title">Вход</h2>
+                <input
+                    type="text"
+                    class="container__input"
+                    placeholder="Логин"
+                    required
+                />
+                <input
+                    type="password"
+                    class="container__input"
+                    placeholder="Пароль"
+                    required
+                />
+                <button type="submit" class="container__button" id="sing-in">
+                    Войти
+                </button>
+                <div class="container__toggle-link">
+                    <span
+                        >Нет аккаунта?
+                        <a href="#" class="container__status" id="to-register">
+                            Зарегистрируйтесь
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="container__comments-link">
+                <a href="index.html" class="container__button">
+                    Вернуться к просмотру комментариев
+                </a>
+            </div>
+        </div>
+        <script type="module" src="modules/regestration.js"></script>
+    </body>
+</html>

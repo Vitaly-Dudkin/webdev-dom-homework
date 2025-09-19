@@ -56,8 +56,8 @@ export function renderComments() {
                     likeButton.classList.remove('-loading-like')
                 })
         })
-    }) // Закрывающая скобка для forEach
-} // Закрывающая скобка для функции
+    })
+}
 
 export function addComment() {
     const nameUser = nameElement.value.trim()
@@ -80,9 +80,13 @@ export function addComment() {
     // Сохраняем текущие значения для восстановления в случае ошибки
     const currentName = nameUser
     const currentText = text
+    const token = localStorage.getItem('token')
 
-    fetch('https://wedev-api.sky.pro/api/v1/:vitaly-dudkin/comments', {
+    fetch('https://wedev-api.sky.pro/api/v2/vitaly-dudkin/comments', {
         method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
             text: sanitizeHtml(text),
             name: sanitizeHtml(nameUser),
@@ -97,6 +101,10 @@ export function addComment() {
                     )
                 } else if (response.status >= 500) {
                     throw new Error('Ошибка сервера. Попробуйте позже.')
+                } else if (response.status === 401) {
+                    throw new Error(
+                        'Для публикации комментария необходимо зарегистрироваться по кнопке ниже',
+                    )
                 } else {
                     throw new Error(
                         `Ошибка: ${response.status} ${response.statusText}`,
